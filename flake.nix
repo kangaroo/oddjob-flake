@@ -7,6 +7,7 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (system:
       let
         pkgs = inputs.nixpkgs.legacyPackages."${system}";
+        lib = inputs.nixpkgs.lib;
       in
       {
         packages.default = pkgs.stdenv.mkDerivation rec {
@@ -37,6 +38,16 @@
           postConfigure = ''
             substituteInPlace src/oddjobd.c --replace "globals.selinux_enabled" "FALSE"
           '';
+
+          meta = with lib; {
+            description = "Odd Job Daemon";
+            homepage = "https://pagure.io/oddjob";
+            changelog = "https://pagure.io/oddjob/blob/c539e931b6dac3f1dd51cd54696adf918fad0053/f/ChangeLog";
+            mainProgram = "oddjobd";
+            license = licenses.bsd0;
+            platforms = platforms.linux;
+            maintainers = with maintainers; [ kangaroo ];
+          };
         };
       });
 }
